@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input[type="email"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script>
+        function sendOTP() {
+            var email = document.getElementById("email").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    alert("OTP sent to " + email);
+                    document.getElementById("otpForm").style.display = "block";
+                    document.getElementById("emailForm").style.display = "none";
+                }
+            };
+            xhttp.open("GET", "https://script.google.com/macros/s/AKfycbyHGyBM5P1Iw9W06mD6WWRqyJy0stwX_v1ZCor73KgstWYG4Fcg5EnCmKOvu1IiL4cYkg/exec?email=" + encodeURIComponent(email), true);
+            xhttp.send();
+        }
+
+        function verifyOTP() {
+            var email = document.getElementById("email").value;
+            var otp = document.getElementById("otp").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.responseText);
+                    if (response.status === 'success') {
+                        window.location.href = response.link;
+                    } else {
+                        alert("Invalid OTP");
+                    }
+                }
+            };
+            xhttp.open("GET", "https://script.google.com/macros/s/AKfycbyHGyBM5P1Iw9W06mD6WWRqyJy0stwX_v1ZCor73KgstWYG4Fcg5EnCmKOvu1IiL4cYkg/exec?email=" + encodeURIComponent(email) + "&otp=" + encodeURIComponent(otp), true);
+            xhttp.send();
+        }
+    </script>
+</head>
+<body>
+    <div class="container" id="emailForm">
+        <h2>Enter Your Email</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <button onclick="sendOTP()">Send OTP</button>
+    </div>
+    <div class="container" id="otpForm" style="display:none;">
+        <h2>Enter OTP</h2>
+        <input type="text" id="otp" placeholder="OTP" required>
+        <button onclick="verifyOTP()">Submit OTP</button>
+    </div>
+</body>
+</html>
